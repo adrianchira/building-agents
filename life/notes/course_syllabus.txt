@@ -2,5 +2,5 @@ AI Engineering Evening Program (12 weeks, online)
 - Live sessions: Tuesday and Thursday 19:30-21:00 (Eastern), on Zoom. Recordings available.
 - Weekly quiz due Tuesday 23:59.
 - CAPSTONE: build an LLM-powered app (RAG or agent) on your own data.
-  Demo day: Friday 16 October, 18:00-19:00 on Zoom. 10-minute demo + 5 minutes Q&A.
-  Submit a 3-minute demo video and your repo link by Thursday 15 October, 23:59.
+  Demo day: {{+4}}, 18:00-19:00 on Zoom. 10-minute demo + 5 minutes Q&A.
+  Submit a 3-minute demo video and your repo link by {{+3}}, 23:59.

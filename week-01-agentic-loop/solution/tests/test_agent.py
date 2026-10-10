@@ -110,3 +110,18 @@ def test_loop_does_not_run_tools_when_cut_off():
     result = run_agent("x", provider="anthropic", client=client, verbose=False)
     assert result.stop == "max_tokens"
     assert len(client.requests) == 1
+
+
+# ---------- the simulated week follows the calendar ----------
+
+def test_week_moves_but_weekdays_and_answers_stay(tmp_path):
+    import csv
+    from datetime import date
+    from agent import config
+    from agent.simweek import build_week
+    week = build_week(tmp_path / "data", template_dir=config.LIFE_DIR, today=date(2026, 11, 5))
+    assert week.today == "Monday 2026-11-02"
+    rows = list(csv.DictReader(open(tmp_path / "data" / "tasks.csv")))
+    due = sum(float(t["est_hours"]) for t in rows if t["status"] == "todo" and t["due"] < week.day(4))
+    assert due == 9.25
+    assert "Friday, November 6" in (tmp_path / "data" / "notes" / "course_syllabus.txt").read_text()

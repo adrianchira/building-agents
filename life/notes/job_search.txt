@@ -2,7 +2,7 @@ Job search: AI Engineer (applied LLMs), remote or hybrid
 - Target: AI Engineer / ML Engineer roles that value 15 years of backend experience.
 - Salary floor: $165k. No relocation (kids' school).
 Pipeline
-- Northwind AI: recruiter screen Tue 13 Oct 20:30 (phone). Tailor the resume first!
-- Brightline Health: applied 9 Oct, waiting.
-- Kestrel Labs: possible referral via Priya (coffee chat Mon 12 Oct).
+- Northwind AI: recruiter screen {{+1:short}} 20:30 (phone). Tailor the resume first!
+- Brightline Health: applied {{-3:short}}, waiting.
+- Kestrel Labs: possible referral via Priya (coffee chat {{+0:short}}).
 Weekly goal: 5 applications, 2 networking conversations, 1 mock interview.

@@ -7,6 +7,7 @@ from datetime import date, timedelta
 from pathlib import Path
 
 from . import config
+from .simweek import build_week
 
 SCHEMA = """
 CREATE TABLE events (
@@ -33,9 +34,11 @@ _path: Path = config.DB_PATH
 _rw: sqlite3.Connection | None = None
 
 
-def _history(rng: random.Random, first: date, last: date):
-    """Plausible past events for Alex: work, gym, kids, the AI course (since late August), networking."""
-    course_start = date(2026, 8, 25)
+def _history(rng: random.Random, monday: date):
+    """A year of plausible past events for Alex: work, gym, kids, the AI course
+    (started 7 weeks ago), networking (last 4 months). Everything before `monday`."""
+    first, last = monday - timedelta(days=406), monday - timedelta(days=1)
+    course_start, networking_start = monday - timedelta(days=48), monday - timedelta(days=133)
     d = first
     while d <= last:
         wd = d.weekday()  # 0 = Monday
@@ -49,7 +52,7 @@ def _history(rng: random.Random, first: date, last: date):
             yield d, "17:45", "18:30", "Pick up kids from soccer practice", "family", "Riverside Park fields"
         if wd in (1, 3) and d >= course_start:
             yield d, "19:30", "21:00", "AI course: live session", "course", "Zoom"
-        if wd < 5 and d >= date(2026, 6, 1) and rng.random() < 0.08:
+        if wd < 5 and d >= networking_start and rng.random() < 0.08:
             yield d, "20:00", "20:45", "Networking chat", "networking", "Zoom"
         if wd == 5 and school and rng.random() < 0.8:
             yield d, "09:00", "11:00", "Kids' soccer game", "family", "Riverside Park fields"
@@ -59,7 +62,8 @@ def _history(rng: random.Random, first: date, last: date):
 
 
 def create(path: Path | None = None, *, history: bool = True, seed: int = 7) -> Path:
-    """(Re)build the database from the CSVs and make it the active one."""
+    """(Re)build data/ for the current week, then the database, and make it the active one."""
+    week = build_week(config.DATA_DIR, template_dir=config.LIFE_DIR, today=config.WEEK.monday)
     path = Path(path or config.DB_PATH)
     use(path)  # closes any open connection before we delete the file
     path.unlink(missing_ok=True)
@@ -72,7 +76,7 @@ def create(path: Path | None = None, *, history: bool = True, seed: int = 7) -> 
         conn.executemany("INSERT INTO tasks VALUES (:id, :title, :course, :due, :est_hours, :priority, :status)",
                          csv.DictReader(f))
     if history:
-        rows = _history(random.Random(seed), date(2025, 9, 1), date(2026, 10, 11))
+        rows = _history(random.Random(seed), week.monday)
         conn.executemany("INSERT INTO events (date, start, end, title, category, location) VALUES (?, ?, ?, ?, ?, ?)",
                          ((d.isoformat(), *rest) for d, *rest in rows))
     conn.commit()
@@ -85,6 +89,18 @@ def use(path: Path) -> None:
     if _rw is not None:
         _rw.close()
     _path, _rw = Path(path), None
+
+
+def is_current() -> bool:
+    """Does the database hold this week's data? (The week moves with the calendar.)"""
+    if not _path.exists():
+        return False
+    conn = sqlite3.connect(_path)
+    try:
+        row = conn.execute("SELECT date FROM events WHERE id = 1").fetchone()
+    finally:
+        conn.close()
+    return row is not None and row[0] == config.WEEK.day(0)
 
 
 def path() -> Path:

@@ -7,6 +7,10 @@ to experiment, then as clean Python modules with tests. Students work against a 
 **Alex, 44**, a senior backend developer in the US with a full-time job and two kids, who is retraining as an AI
 engineer in an evening program while job-hunting. Students only connect their real calendar at the end, read-only first.
 
+Alex's week **follows the real calendar**: the template lives in [`life/`](life/), and each notebook writes a copy
+dated to the current week (Monday to Sunday; on weekends, the coming week). Same events, same answers, every week.
+To freeze it, e.g. for a recorded demo, set `LIFE_TODAY=2026-10-12` in `.env`.
+
 | Week | Capability | What the assistant can do afterwards | Folder |
 |---|---|---|---|
 | 1 | The agentic loop | Answer questions over calendar, task and note files with exact arithmetic; route tasks to the right model | [`week-01-agentic-loop/`](week-01-agentic-loop/) |

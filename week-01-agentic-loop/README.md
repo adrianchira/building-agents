@@ -12,7 +12,8 @@
 | `01_agentic_loop.ipynb` | **Start here.** In-class notebook: one call → one tool by hand → the loop → break it → read the trace |
 | `providers.py` | Adapters: one interface for OpenAI (default), Claude and Ollama. Used from Part 4 on |
 | `LOOPS_IN_THE_WILD.md` | How Hermes Agent and OpenClaw implement the same loop, and why they add what they add |
-| `data/` | Alex's week (Mon 12 – Sun 18 Oct 2026): `calendar.csv`, `tasks.csv`, `notes/` (AI course syllabus, preferences, job-search pipeline) |
+| `simweek.py` | Writes Alex's week into `data/`, dated to the **current** week (template: the course's `life/` folder) |
+| `data/` | *Generated* by the setup cell, not in git: `calendar.csv`, `tasks.csv`, `notes/` (AI course syllabus, preferences, job-search pipeline) |
 | `solution/` | Reference solution for homework 8.1 (the notebook refactored into modules, with tests). **Instructors: remove before sharing with students.** |
 
 ## Run it

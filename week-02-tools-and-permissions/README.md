@@ -8,10 +8,10 @@ This week it gets real tools over a calendar and task database, and the power to
 | File | What it is |
 |---|---|
 | `02_tools_and_permissions.ipynb` | **Start here.** In-class notebook |
-| `lifedb.py` | Builds `life.db` (SQLite) from `data/*.csv` plus a year of generated history (~550 events) |
+| `lifedb.py` | Writes this week's `data/` (via `simweek.py`) and builds `life.db` (SQLite) from it, plus a year of generated history (~550 events) |
 | `providers.py` | Same adapters as week 1: OpenAI (default), Claude, Ollama |
 | `agent_core.py` | Last week's loop as a module, plus: Pydantic `tool()` helper, parallel read-only batches, `FatalToolError` |
-| `data/` | Same simulated week as week 1 (Mon 12 – Sun 18 Oct 2026) |
+| `data/` | *Generated*, not in git: the same simulated week as week 1, dated to the current week |
 | `solution/` | Reference solution for homework 8.1 (week 1 package + `db`, `tools`, `permissions`, `reliability`). **Remove before sharing.** |
 
 ## Run it
@@ -51,4 +51,4 @@ python main.py --reset "Move my dentist appointment to Friday at 8:00"   # asks 
 - Known answers (for checking students' runs): 9.25 h of tasks due before Friday's demo; free evenings (19:00–22:30)
   Mon–Thu 2.75 / 2 / 1.5 / 2 h = 8.25 h, so **1 h short**; `free_slots` on Tue 13 Oct (06:00–22:30) = 6.5 h;
   no free 2-hour block inside Alex's focus hours (05:30–06:30, 20:30–22:30) before Thursday night;
-  13.5 h of live AI course sessions in September 2026.
+  12 h of live AI course sessions in the last 4 weeks. These are the same every week: only the dates move.

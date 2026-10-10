@@ -156,7 +156,7 @@ def free_slots(date: str, day_start: str = "06:00", day_end: str = "22:30", min_
         f"\nTOTAL free: {total / 60:g} h"
 
 
-NOTES = sorted(p.name for p in (config.DATA_DIR / "notes").glob("*.txt"))
+NOTES = sorted(p.name for p in (config.LIFE_DIR / "notes").glob("*.txt"))  # same names every week
 
 
 class ReadNoteIn(Args):

@@ -90,3 +90,16 @@ def test_move_event_and_unknown_id():
 def test_complete_task_is_idempotent():
     assert "Marked #7" in call("complete_task", task_id=7).content
     assert "already done" in call("complete_task", task_id=7).content
+
+
+def test_database_follows_the_calendar(monkeypatch, tmp_path):
+    from datetime import date
+    from agent import config
+    from agent.simweek import Week
+    assert db.is_current()
+    monkeypatch.setattr(config, "WEEK", Week(date(2026, 11, 2)))      # a later week
+    assert not db.is_current()
+    db.create(tmp_path / "later.db")
+    assert db.is_current()
+    out = call("list_tasks", due_before=config.WEEK.day(4)).content
+    assert "TOTAL est_hours: 9.25 (6 tasks)" in out                   # same answer, new dates

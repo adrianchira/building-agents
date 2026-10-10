@@ -5,3 +5,4 @@ __pycache__/
 .env
 life.db
 .DS_Store
+week-*/data/

@@ -3,6 +3,12 @@
 import os
 from pathlib import Path
 
+from dotenv import find_dotenv, load_dotenv
+
+from .simweek import Week, find_template_dir, sim_monday
+
+load_dotenv(find_dotenv(usecwd=True))  # .env holds API keys, and may pin LIFE_TODAY
+
 PROVIDER = "openai"   # "openai" | "anthropic" | "ollama"  (see providers.py)
 MODEL = "gpt-6-luna"  # e.g. "claude-opus-5-5" with PROVIDER = "anthropic"
 EFFORT = None         # None = provider default; or "low" | "medium" | "high"
@@ -13,7 +19,10 @@ DATA_DIR = Path(
     os.environ.get("AGENT_DATA_DIR", Path(__file__).resolve().parents[2] / "data")
 ).resolve()
 
-TODAY = "Monday 2026-10-12"  # the simulated "now" of the sample data
+# Alex's week follows the real calendar: build_week() writes it into DATA_DIR (see simweek.py).
+LIFE_DIR = find_template_dir(Path(__file__).resolve())
+WEEK = Week(sim_monday())
+TODAY = WEEK.today  # e.g. "Monday 2026-10-12": the simulated "now"
 
 SYSTEM_PROMPT = (
     "You are a personal assistant for Alex, a 44-year-old software developer with a full-time "

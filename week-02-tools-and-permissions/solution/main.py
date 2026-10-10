@@ -19,7 +19,7 @@ def main() -> None:
     args = sys.argv[1:]
     flags = {a for a in args if a.startswith("--")}
     task = " ".join(a for a in args if not a.startswith("--")) or DEFAULT_TASK
-    if "--reset" in flags or not db.path().exists():
+    if "--reset" in flags or not db.is_current():  # new week (or first run): rebuild
         db.create()
 
     tools = apply_policy(TOOLS)  # interactive: writes show a diff and wait for y/N

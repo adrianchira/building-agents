@@ -1,0 +1,4 @@
+anthropic>=1.11
+openai>=3.24        # Part 9 only: OpenAI and Ollama via the Responses API
+jupyter
+pytest

@@ -1,0 +1,18 @@
+id,date,start,end,title,category,location
+1,2026-10-12,09:00,10:30,Machine Learning lecture,class,Room B201
+2,2026-10-12,13:00,17:00,Shift at café,work,Café Central
+3,2026-10-12,18:30,19:30,Gym,health,Campus gym
+4,2026-10-13,10:00,12:00,Databases lab,class,Lab 3
+5,2026-10-13,14:00,15:00,ML study group,study,Library
+6,2026-10-13,14:30,15:30,Group project sync,study,Online
+7,2026-10-13,16:00,16:45,Dentist,personal,Dental clinic
+8,2026-10-14,09:00,10:30,Machine Learning lecture,class,Room B201
+9,2026-10-14,11:00,12:00,Project meeting,study,Online
+10,2026-10-14,12:30,17:30,Shift at café,work,Café Central
+11,2026-10-15,10:00,12:00,Databases lab,class,Lab 3
+12,2026-10-15,15:00,16:00,Thesis supervisor meeting,study,Office 4.12
+13,2026-10-15,18:30,19:30,Gym,health,Campus gym
+14,2026-10-16,09:00,11:00,ML midterm exam,exam,Aula Magna
+15,2026-10-16,13:00,18:00,Shift at café,work,Café Central
+16,2026-10-17,11:00,13:00,Brunch with Ana,social,Downtown
+17,2026-10-18,10:00,11:00,Call with parents,personal,Phone

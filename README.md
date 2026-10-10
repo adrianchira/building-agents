@@ -30,3 +30,8 @@ export ANTHROPIC_API_KEY=sk-ant-...      # or run: ant auth login
 ```
 
 Requires Python 3.10+. Each week's `solution/` folder is the instructor's reference: remove it before sharing.
+
+## License
+
+[MIT](LICENSE). Code excerpts discussed in `week-01-agentic-loop/LOOPS_IN_THE_WILD.md` belong to their
+own projects (Hermes Agent, OpenClaw, pi), all MIT-licensed; see the links there.

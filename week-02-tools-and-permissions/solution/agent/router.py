@@ -82,5 +82,5 @@ def run_routed(task: str, *, tools: dict = TOOLS, verbose: bool = True,
     if verbose:
         print(f"🧭 tier={routing.tier} → {routing.provider}/{routing.model}  ({routing.reason})")
     conv = open_conversation(routing.provider, routing.model, task, tools=tool_schemas(tools),
-                             client=clients.get(routing.provider))
+                             system=config.SYSTEM_PROMPT, client=clients.get(routing.provider))
     return routing, run_agent(task, conversation=conv, tools=tools, verbose=verbose, **loop_kwargs)

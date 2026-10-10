@@ -9,6 +9,7 @@ over a calendar and task database, and the power to change things, safely.*
 |---|---|
 | `02_tools_and_permissions.ipynb` | **Start here.** In-class notebook |
 | `lifedb.py` | Builds `life.db` (SQLite) from `data/*.csv` plus a year of generated history (~510 events) |
+| `providers.py` | Same adapters as week 1: OpenAI (default), Claude, Ollama |
 | `agent_core.py` | Last week's loop as a module, plus: Pydantic `tool()` helper, parallel read-only batches, `FatalToolError` |
 | `data/` | Same simulated week as week 1 (Mon 12 – Sun 18 Oct 2026) |
 | `solution/` | Reference solution for homework 8.1 (week 1 package + `db`, `tools`, `permissions`, `reliability`). **Remove before sharing.** |
@@ -47,6 +48,6 @@ python main.py --reset "Move my dentist appointment to Thursday 16:30"   # asks 
 
 - Part 5 uses `input()` for approvals: run it in Jupyter or VS Code, where input prompts work.
 - `lifedb.create_db()` resets the database. Re-run it after experiments that change data.
-- Part 1 makes 9 agent runs and Part 7 makes 30 single calls. Set `MODEL = "claude-sonnet-5-5"` in the setup cell for a cheaper session.
+- Part 1 makes 9 agent runs and Part 7 makes 30 single calls. The default `gpt-6-luna` keeps that cheap; on Claude the setup cell uses `claude-sonnet-5-5`.
 - Known answers (for checking students' runs): 13.75 h of tasks due before Friday; free time Mon–Thu 3.5 / 4.75 / 1.5 / 6 h;
   no 2-hour slot inside 09:00–12:00 before Thursday evening; 40 h of café shifts in September 2026.

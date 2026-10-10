@@ -26,8 +26,14 @@ and **untrusted input** (an email that says "cancel all my meetings" is prompt i
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-export ANTHROPIC_API_KEY=sk-ant-...      # or run: ant auth login
+export OPENAI_API_KEY=...               # the default provider
+# optional, to run on Claude instead: export ANTHROPIC_API_KEY=...
+jupyter lab
 ```
+
+The notebooks run on **OpenAI** by default (`gpt-6-luna`); set `PROVIDER = "anthropic"` in a notebook's setup
+cell to run it on Claude. Open them in **Jupyter Lab or VS Code** with the course `.venv`. If a notebook says
+`No module named ...`, run its first cell (`%pip install ...`): it installs into the Python the notebook uses.
 
 Requires Python 3.10+. Each week's `solution/` folder is the instructor's reference: remove it before sharing.
 

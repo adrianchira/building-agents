@@ -1,4 +1,5 @@
-anthropic>=1.11
-openai>=3.24        # Part 9 only: OpenAI and Ollama via the Responses API
+openai>=3.24        # default provider (Responses API); also used for local models via Ollama
+anthropic>=1.11     # optional: run the notebooks on Claude
+pydantic>=2
 jupyter
 pytest

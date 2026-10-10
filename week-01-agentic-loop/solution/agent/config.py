@@ -3,13 +3,10 @@
 import os
 from pathlib import Path
 
-MODEL = "claude-opus-5-5"
-MAX_TOKENS = 16000
-EFFORT = "medium"  # low | medium | high | xhigh | max  -- trades thoroughness for tokens
+PROVIDER = "openai"   # "openai" | "anthropic" | "ollama"  (see providers.py)
+MODEL = "gpt-6-luna"  # e.g. "claude-opus-5-5" with PROVIDER = "anthropic"
+EFFORT = None         # None = provider default; or "low" | "medium" | "high"
 MAX_TURNS = 10
-
-# On a safety refusal, the API re-runs the request on a fallback model it picks.
-FALLBACK_BETA = "server-side-fallback-2026-07-01"
 
 # The agent may only touch files under this folder (see tools._safe_path).
 DATA_DIR = Path(
@@ -27,17 +24,16 @@ SYSTEM_PROMPT = (
 
 # ---------- model routing (Part 9) ----------
 
-OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434/v1")
 OLLAMA_MODEL = os.environ.get("OLLAMA_MODEL", "qwen3:8b")
 
 # The cheap, fast model that reads the task and picks a tier. (provider, model)
-CLASSIFIER = ("anthropic", "claude-haiku-4-5")
+CLASSIFIER = ("openai", "gpt-6-luna")  # or ("anthropic", "claude-haiku-4-5"), ("ollama", OLLAMA_MODEL)
 
 # For each tier, candidates in order of preference; the router takes the first one available.
 ROUTES = {
     "simple":   [("ollama", OLLAMA_MODEL), ("openai", "gpt-6-luna"), ("anthropic", "claude-haiku-4-5")],
     "moderate": [("openai", "gpt-6.1-sol"), ("anthropic", "claude-sonnet-5-5")],
-    "hard":     [("anthropic", "claude-opus-5-5"), ("openai", "gpt-6-astra")],
+    "hard":     [("openai", "gpt-6-astra"), ("anthropic", "claude-opus-5-5")],
 }
 # When the classifier fails or is unsure, err on the side of capability.
 DEFAULT_TIER = "hard"

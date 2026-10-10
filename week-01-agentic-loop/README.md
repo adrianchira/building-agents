@@ -10,6 +10,7 @@
 | File | What it is |
 |---|---|
 | `01_agentic_loop.ipynb` | **Start here.** In-class notebook: one call → one tool by hand → the loop → break it → read the trace |
+| `providers.py` | Adapters: one interface for OpenAI (default), Claude and Ollama. Used from Part 4 on |
 | `LOOPS_IN_THE_WILD.md` | How Hermes Agent and OpenClaw implement the same loop, and why they add what they add |
 | `data/` | A simulated student's week (Mon 12 – Sun 18 Oct 2026): `calendar.csv`, `tasks.csv`, `notes/` (syllabus, preferences, café rota) |
 | `solution/` | Reference solution for homework 8.1 (the notebook refactored into modules, with tests). **Instructors: remove before sharing with students.** |
@@ -33,10 +34,10 @@ python main.py --route "List the files"          # classify first, then pick pro
 ## Part 9: model routing across providers (optional)
 
 ```
-task ──► classifier (Haiku 4.5) ──► simple | moderate | hard ──► ROUTES[tier] ──► same agentic loop
+task ──► classifier (gpt-6-luna) ──► simple | moderate | hard ──► ROUTES[tier] ──► same agentic loop
 ```
 
-- **Adapters** (`solution/agent/providers.py`): one for the Anthropic Messages API, one for the OpenAI **Responses** API.
+- **Adapters** (`providers.py`, also in `solution/agent/`): one for the OpenAI **Responses** API, one for the Anthropic Messages API.
   Ollama (≥ 0.13.3) serves the Responses API locally, so the second adapter covers both OpenAI and local models.
   OpenAI's current models only allow tool calling over Chat Completions with reasoning turned off, so we use the Responses API.
 - **Route table** (`solution/agent/config.py`): candidates per tier in order of preference. Unavailable providers
@@ -69,7 +70,8 @@ See Part 8 of the notebook:
 
 ## Notes on the API used
 
-- Model: `claude-opus-5-5`. Change `MODEL` (notebook) or `config.MODEL` (solution) to use a cheaper model.
-- `output_config={"effort": "medium"}` controls how much the model thinks per turn.
-- `fallbacks="default"` (beta `server-side-fallback-2026-07-01`): if a safety classifier declines a request,
-  the API reruns it on a fallback model. It's why the loop calls `client.beta.messages.create`.
+- Default: **OpenAI Responses API**, model `gpt-6-luna` (`PROVIDER`/`MODEL` in the notebook, `config.py` in the solution).
+  Tools are sent with `strict: false`: in strict mode every field must be required, which breaks optional arguments.
+- Claude (`PROVIDER = "anthropic"`, `claude-opus-5-5`): the adapter also sets `output_config.effort` and
+  `fallbacks="default"` (beta): if a safety classifier declines a request, the API reruns it on a fallback model.
+- Parts 1–2 show the raw API calls for **both** providers side by side; from Part 4 on, `providers.py` hides the difference.

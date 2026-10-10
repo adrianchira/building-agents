@@ -5,6 +5,7 @@ with three additions we study this week:
   * `run_tools()`   - read-only tool calls run in parallel, writes run one at a time
   * FatalToolError  - a tool can stop the whole run when continuing makes no sense
 
+It talks to the model only through providers.py, so it runs on OpenAI (default) or Claude.
 Read it: `import inspect; print(inspect.getsource(agent_core.run_tools))`
 """
 
@@ -14,12 +15,12 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-import anthropic
 from pydantic import BaseModel, ValidationError
 
-MODEL = "claude-opus-5-5"
-MAX_TOKENS = 16000
-EFFORT_MODELS = {"claude-opus-5-5", "claude-sonnet-5-5"}  # Haiku 4.5 rejects effort / fallbacks
+from providers import ToolResult, open_conversation
+
+PROVIDER = "openai"
+MODEL = "gpt-6-luna"
 
 READ, WRITE, DESTRUCTIVE = "read", "write", "destructive"
 
@@ -53,25 +54,23 @@ def _format_validation_error(exc: ValidationError) -> str:
     return "Invalid arguments. " + "; ".join(problems)
 
 
-def execute_tool(call: Any, tools: dict) -> dict:
-    """One tool_use block -> one tool_result block. Errors go back to the model,
+def execute_tool(call: Any, tools: dict) -> ToolResult:
+    """One tool call -> one ToolResult. Errors go back to the model,
     except FatalToolError, which propagates and ends the run."""
-    result = {"type": "tool_result", "tool_use_id": call.id}
     entry = tools.get(call.name)
     if entry is None:
-        return {**result, "content": f"Unknown tool '{call.name}'. Available: {', '.join(tools)}",
-                "is_error": True}
+        return ToolResult(call.id, f"Unknown tool '{call.name}'. Available: {', '.join(tools)}", True)
     try:
-        return {**result, "content": entry["fn"](**call.input)}
+        return ToolResult(call.id, entry["fn"](**call.input))
     except FatalToolError:
         raise
     except ValidationError as exc:
-        return {**result, "content": _format_validation_error(exc), "is_error": True}
+        return ToolResult(call.id, _format_validation_error(exc), True)
     except Exception as exc:
-        return {**result, "content": f"{type(exc).__name__}: {exc}", "is_error": True}
+        return ToolResult(call.id, f"{type(exc).__name__}: {exc}", True)
 
 
-def run_tools(calls: list, tools: dict, *, parallel: bool = True) -> list[dict]:
+def run_tools(calls: list, tools: dict, *, parallel: bool = True) -> list[ToolResult]:
     """Run all tool calls from one model reply. Results keep the order of the calls.
 
     Only an all-read batch runs in parallel: writes may depend on each other and
@@ -94,7 +93,6 @@ class Result:
     output_tokens: int = 0
     tool_calls: list[str] = field(default_factory=list)
     seconds: float = 0.0
-    messages: list = field(default_factory=list, repr=False)
 
 
 def _short(x: Any, n: int = 200) -> str:
@@ -102,50 +100,43 @@ def _short(x: Any, n: int = 200) -> str:
     return s if len(s) <= n else s[:n] + "..."
 
 
-def run_agent(task: str, tools: dict, *, system: str, model: str = MODEL, effort: str = "medium",
-              max_turns: int = 10, parallel: bool = True, verbose: bool = True,
-              client: Any = None) -> Result:
-    client = client or anthropic.Anthropic()
-    extra = ({"output_config": {"effort": effort}, "betas": ["server-side-fallback-2026-07-01"],
-              "fallbacks": "default"} if model in EFFORT_MODELS else {})
-    messages: list[dict] = [{"role": "user", "content": task}]
-    res = Result("", "", 0, messages=messages)
+def run_agent(task: str, tools: dict, *, system: str, provider: str = PROVIDER, model: str = MODEL,
+              effort: str | None = None, max_turns: int = 10, parallel: bool = True,
+              verbose: bool = True, client: Any = None) -> Result:
+    conv = open_conversation(provider, model, task, tools=tool_schemas(tools), system=system,
+                             effort=effort, client=client)
+    res = Result("", "", 0)
     t0 = time.perf_counter()
 
     for turn in range(1, max_turns + 1):
         res.turns = turn
-        r = client.beta.messages.create(model=model, max_tokens=MAX_TOKENS, system=system,
-                                        tools=tool_schemas(tools), messages=messages, **extra)
-        res.input_tokens += r.usage.input_tokens
-        res.output_tokens += r.usage.output_tokens
-        messages.append({"role": "assistant", "content": r.content})
-        calls = [b for b in r.content if b.type == "tool_use"]
+        step = conv.ask()
+        res.input_tokens += step.input_tokens
+        res.output_tokens += step.output_tokens
         if verbose:
-            print(f"\n── turn {turn} · stop={r.stop_reason} · in={r.usage.input_tokens} out={r.usage.output_tokens}")
-            for b in r.content:
-                if b.type == "text" and b.text.strip():
-                    print("  💬", _short(b.text, 300))
-            for c in calls:
+            print(f"\n── turn {turn} · stop={step.stop} · in={step.input_tokens} out={step.output_tokens}")
+            if step.text:
+                print("  💬", _short(step.text, 300))
+            for c in step.tool_calls:
                 print(f"  🔧 {c.name}({json.dumps(c.input, ensure_ascii=False)})")
 
-        if r.stop_reason == "tool_use":
-            res.tool_calls += [c.name for c in calls]
+        if step.stop == "tool_use":
+            res.tool_calls += [c.name for c in step.tool_calls]
             try:
-                results = run_tools(calls, tools, parallel=parallel)
+                results = run_tools(step.tool_calls, tools, parallel=parallel)
             except FatalToolError as exc:
                 res.answer, res.stop = f"[run stopped: {exc}]", "fatal"
                 break
             if verbose:
                 for x in results:
-                    print("  ❌" if x.get("is_error") else "  ✅", _short(x["content"]))
-            messages.append({"role": "user", "content": results})
+                    print("  ❌" if x.is_error else "  ✅", _short(x.content))
+            conv.add_tool_results(results)
             continue
 
-        text = "\n".join(b.text for b in r.content if b.type == "text").strip()
         res.answer, res.stop = {
-            "max_tokens": (text + "\n[cut off: max_tokens]", "max_tokens"),
+            "max_tokens": (step.text + "\n[cut off: max_tokens]", "max_tokens"),
             "refusal": ("[the model declined this request]", "refusal"),
-        }.get(r.stop_reason, (text, str(r.stop_reason)))
+        }.get(step.stop, (step.text, step.stop))
         break
     else:
         res.answer, res.stop = f"[stopped after {max_turns} turns]", "max_turns"
@@ -154,10 +145,10 @@ def run_agent(task: str, tools: dict, *, system: str, model: str = MODEL, effort
     return res
 
 
-def first_tool(task: str, tools: dict, *, system: str, model: str = MODEL, client: Any = None) -> str:
+def first_tool(task: str, tools: dict, *, system: str, provider: str = PROVIDER, model: str = MODEL,
+               client: Any = None) -> str:
     """Which tool does the model reach for FIRST? One call, nothing executed. For evals."""
-    client = client or anthropic.Anthropic()
-    extra = {"output_config": {"effort": "low"}} if model in EFFORT_MODELS else {}
-    r = client.messages.create(model=model, max_tokens=4000, system=system, tools=tool_schemas(tools),
-                               messages=[{"role": "user", "content": task}], **extra)
-    return next((b.name for b in r.content if b.type == "tool_use"), "(no tool)")
+    conv = open_conversation(provider, model, task, tools=tool_schemas(tools), system=system,
+                             effort="low", client=client)
+    step = conv.ask()
+    return step.tool_calls[0].name if step.tool_calls else "(no tool)"

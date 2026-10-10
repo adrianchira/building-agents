@@ -32,7 +32,7 @@ class FakeClient:
 def test_loop_runs_tools_then_stops():
     client = FakeClient(_resp("tool_use", _tool("a", "list_tasks", due_before="2026-10-16")),
                         _resp("end_turn", _text("13.75 h")))
-    result = run_agent("x", client=client, verbose=False)
+    result = run_agent("x", provider="anthropic", client=client, verbose=False)
     assert (result.answer, result.stop, result.turns) == ("13.75 h", "end_turn", 2)
     sent = client.requests[1]["messages"][-1]["content"][0]
     assert sent["tool_use_id"] == "a" and "TOTAL est_hours: 13.75" in sent["content"]
@@ -41,7 +41,7 @@ def test_loop_runs_tools_then_stops():
 def test_fatal_error_stops_the_run():
     db.path().unlink()
     client = FakeClient(_resp("tool_use", _tool("a", "list_tasks")), _resp("end_turn", _text("never")))
-    result = run_agent("x", client=client, verbose=False)
+    result = run_agent("x", provider="anthropic", client=client, verbose=False)
     assert result.stop == "fatal" and "database not found" in result.answer
     assert len(client.requests) == 1
 

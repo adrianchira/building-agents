@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import config
-from .providers import AnthropicConversation, Conversation, ToolResult
+from .providers import ToolResult, open_conversation
 from .tools import READ, TOOLS, FatalToolError, execute_tool, tool_schemas
 from .tracing import trace_step, trace_tool_result
 
@@ -35,14 +35,18 @@ def run_tools(calls: list, tools: dict[str, dict[str, Any]], *, parallel: bool =
 def run_agent(
     task: str,
     *,
-    conversation: Conversation | None = None,
+    conversation: Any = None,
+    provider: str | None = None,
+    model: str | None = None,
     client: Any = None,
     tools: dict[str, dict[str, Any]] = TOOLS,
     max_turns: int = config.MAX_TURNS,
     parallel: bool = True,
     verbose: bool = True,
 ) -> AgentResult:
-    conv = conversation or AnthropicConversation(task, tools=tool_schemas(tools), client=client)
+    conv = conversation or open_conversation(
+        provider or config.PROVIDER, model or config.MODEL, task, tools=tool_schemas(tools),
+        system=config.SYSTEM_PROMPT, effort=config.EFFORT, client=client)
     tokens_in = tokens_out = 0
 
     for turn in range(1, max_turns + 1):

@@ -4,3 +4,4 @@ __pycache__/
 .ipynb_checkpoints/
 .env
 life.db
+.DS_Store

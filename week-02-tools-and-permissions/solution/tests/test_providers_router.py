@@ -67,6 +67,11 @@ def test_responses_incomplete_is_max_tokens_and_tools_not_run():
 
 # ---------- router ----------
 
+@pytest.fixture(autouse=True)
+def claude_classifier(monkeypatch):
+    """These router tests script an Anthropic-shaped classifier."""
+    monkeypatch.setattr(config, "CLASSIFIER", ("anthropic", "claude-haiku-4-5"))
+
 class FakeClassifier:
     """Fake Anthropic client whose structured-output reply is `payload`."""
 
@@ -115,3 +120,12 @@ def test_run_routed_end_to_end(monkeypatch):
     )
     assert (routing.tier, routing.provider, routing.model) == ("simple", "openai", "gpt-6-luna")
     assert result.answer == "hi"
+
+
+def test_default_provider_is_openai_with_non_strict_tools():
+    fake = FakeOpenAI(_response(_call("c1", "calculator", expression="1+1")), _response(_msg("2"), text="2"))
+    result = run_agent("1+1?", client=fake, verbose=False)   # no provider given: config.PROVIDER
+    assert result.answer == "2"
+    first = fake.requests[0]
+    assert first["model"] == config.MODEL and first["instructions"] == config.SYSTEM_PROMPT
+    assert all(t["strict"] is False for t in first["tools"])

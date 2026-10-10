@@ -77,7 +77,7 @@ def test_loop_runs_tools_then_stops():
         _resp("tool_use", _text("Let me compute."), _tool("a", "calculator", expression="2+2")),
         _resp("end_turn", _text("It's 4.")),
     )
-    result = run_agent("2+2?", client=client, verbose=False)
+    result = run_agent("2+2?", provider="anthropic", client=client, verbose=False)
 
     assert (result.answer, result.stop, result.turns) == ("It's 4.", "end_turn", 2)
     # 2nd request carried: user task, assistant tool_use, user tool_result
@@ -92,20 +92,21 @@ def test_loop_parallel_tool_results_in_one_message():
               _tool("b", "calculator", expression="2+2")),
         _resp("end_turn", _text("done")),
     )
-    run_agent("x", client=client, verbose=False)
+    run_agent("x", provider="anthropic", client=client, verbose=False)
     results = client.requests[1]["messages"][-1]["content"]
     assert [r["tool_use_id"] for r in results] == ["a", "b"]
 
 
 def test_loop_respects_max_turns():
     looping = [_resp("tool_use", _tool(f"t{i}", "list_dir", path=".")) for i in range(5)]
-    result = run_agent("x", client=FakeClient(*looping), max_turns=3, verbose=False)
+    result = run_agent("x", provider="anthropic", client=FakeClient(*looping), max_turns=3,
+                       verbose=False)
     assert result.stop == "max_turns"
     assert result.turns == 3
 
 
 def test_loop_does_not_run_tools_when_cut_off():
     client = FakeClient(_resp("max_tokens", _tool("a", "read_file", path="calendar.csv")))
-    result = run_agent("x", client=client, verbose=False)
+    result = run_agent("x", provider="anthropic", client=client, verbose=False)
     assert result.stop == "max_tokens"
     assert len(client.requests) == 1

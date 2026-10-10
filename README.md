@@ -22,8 +22,15 @@ and **untrusted input** (an email that says "cancel all my meetings" is prompt i
 
 ## Setup in VS Code (once)
 
-1. **Get the code** and open the folder in VS Code (File → Open Folder… → `building-agents`).
-   Install the recommended extensions when VS Code asks (Python, Jupyter).
+1. **Get the code.** In a terminal, go to where you keep your projects and run:
+
+   ```bash
+   git clone https://github.com/adrianchira/building-agents.git
+   ```
+
+   This creates a folder called `building-agents`. In VS Code, open **that folder** (File → Open Folder…),
+   not a single notebook, so `.env` and `.venv` are found. Install the recommended extensions when VS Code asks
+   (Python, Jupyter). *No git? On the GitHub page, click Code → Download ZIP and unzip it (the folder is then called `building-agents-main`; that works too).*
 2. **Create the environment.** In VS Code's terminal (Terminal → New Terminal):
 
    ```bash
@@ -44,7 +51,7 @@ Requires Python 3.10+. Each week's `solution/` folder is the instructor's refere
 
 ## Your API key
 
-Keys live in **one file, `.env`, in the course folder**. Every notebook and script reads it from there.
+Keys live in **one file, `.env`, in the course folder** (the `building-agents` folder you opened). Every notebook and script reads it from there.
 
 ```bash
 cp .env.example .env               # Windows: copy .env.example .env

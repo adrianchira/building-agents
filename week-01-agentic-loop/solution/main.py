@@ -10,8 +10,8 @@ from agent import config, run_agent, run_routed
 from agent.providers import load_api_key
 
 DEFAULT_TASK = (
-    "Which open tasks are due before my ML midterm on Friday, how many hours of work "
-    "are they in total, and how much free time do I have between 09:00 and 18:00 from "
+    "Which open tasks are due before my capstone demo on Friday, how many hours of work "
+    "are they in total, and how much free time do I have between 19:00 and 22:30 from "
     "Monday to Thursday? Is it enough?"
 )
 

@@ -1,6 +1,6 @@
 """Run the assistant from the command line. Writes ask for your approval first.
 
-    python main.py "Move my dentist appointment to Thursday 16:30"
+    python main.py "Move my dentist appointment to Friday at 8:00"
     python main.py --route "What do I have on Wednesday?"
     python main.py --reset ...      # rebuild life.db from data/*.csv first
 """
@@ -10,7 +10,8 @@ import sys
 from agent import TOOLS, apply_policy, config, db, run_agent, run_routed
 from agent.providers import load_api_key
 
-DEFAULT_TASK = "Find me a 2-hour slot before Thursday evening to revise for the ML midterm."
+DEFAULT_TASK = ("Find me a 2-hour block before Thursday night to finish the RAG pipeline for my capstone, "
+                "in my best focus hours if possible.")
 
 
 def main() -> None:

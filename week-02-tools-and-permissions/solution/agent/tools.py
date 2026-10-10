@@ -43,7 +43,7 @@ def _check_time(v: str) -> str:
 
 Date = Annotated[str, AfterValidator(_check_date), Field(description="YYYY-MM-DD")]
 Time = Annotated[str, AfterValidator(_check_time), Field(description="HH:MM, 24-hour clock")]
-Category = Literal["class", "work", "study", "health", "personal", "social", "exam"]
+Category = Literal["work", "course", "job_search", "networking", "family", "health", "personal", "social"]
 
 
 class Args(BaseModel):
@@ -130,12 +130,12 @@ def list_tasks(status: str = "todo", due_before: str | None = None) -> str:
 
 class FreeSlotsIn(Args):
     date: Date
-    day_start: Time = "09:00"
-    day_end: Time = "18:00"
+    day_start: Time = "06:00"
+    day_end: Time = "22:30"
     min_minutes: int = Field(30, ge=5, le=600, description="Shortest slot worth reporting")
 
 
-def free_slots(date: str, day_start: str = "09:00", day_end: str = "18:00", min_minutes: int = 30) -> str:
+def free_slots(date: str, day_start: str = "06:00", day_end: str = "22:30", min_minutes: int = 30) -> str:
     """Interval arithmetic belongs in code, not in the model's head (remember Tuesday's overlap)."""
     lo, hi = _minutes(day_start), _minutes(day_end)
     busy = sorted((max(_minutes(r["start"]), lo), min(_minutes(r["end"]), hi))
@@ -299,10 +299,11 @@ TOOLS: dict[str, dict[str, Any]] = {
         "List tasks (default: open ones), optionally only those due before a date. "
         "Includes the total estimated hours."),
     "free_slots": tool(free_slots, FreeSlotsIn,
-        "Free time on one day between day_start and day_end, with overlapping events already merged. "
+        "Free time on one day between day_start and day_end (default 06:00-22:30), with overlapping "
+        "events already merged. "
         "Use this instead of computing free time yourself."),
     "read_note": tool(read_note, ReadNoteIn,
-        "Read one of the student's notes: course syllabus, personal preferences, work rota."),
+        "Read one of Alex's notes: AI course syllabus, personal preferences, job-search pipeline."),
     "run_sql": tool(run_sql, RunSqlIn,
         "Read-only SQL over the full history for questions the other tools can't answer "
         "(counts, trends, past months). Tables: events(id, date, start, end, title, category, "

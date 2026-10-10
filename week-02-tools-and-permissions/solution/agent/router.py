@@ -16,7 +16,7 @@ TIERS = tuple(config.ROUTES)  # ("simple", "moderate", "hard")
 
 CLASSIFIER_PROMPT = """\
 You route tasks for a personal assistant. The assistant has tools to read and change a
-student's calendar and tasks, read their notes, run SQL over their history, and a calculator. Classify how demanding the task is FOR THAT AGENT:
+user's calendar and tasks, read their notes, run SQL over their history, and a calculator. Classify how demanding the task is FOR THAT AGENT:
 
 - simple:   one or two tool calls, no real reasoning (what's on a day, list open tasks)
 - moderate: several tool calls, a simple change (move one event), light arithmetic

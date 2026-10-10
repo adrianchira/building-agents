@@ -1,10 +1,10 @@
 id,title,course,due,est_hours,priority,status
-1,Problem set 3,Machine Learning,2026-10-13,3,high,todo
-2,Revise for ML midterm,Machine Learning,2026-10-15,6,high,todo
-3,DB lab report 2,Databases,2026-10-14,2.5,medium,todo
-4,Thesis outline draft,Thesis,2026-10-20,4,medium,todo
-5,Read chapter 5,Databases,2026-10-16,1.5,low,todo
-6,Project slides,Group project,2026-10-15,2,medium,todo
-7,Pay rent,Personal,2026-10-15,0.25,high,todo
-8,Book flight home,Personal,2026-10-25,0.5,low,todo
-9,Problem set 2,Machine Learning,2026-10-06,3,high,done
+1,Finish the RAG pipeline for the capstone,AI course,2026-10-15,4,high,todo
+2,Record the capstone demo video,AI course,2026-10-15,1.5,high,todo
+3,Course quiz: embeddings and vector search,AI course,2026-10-13,1,medium,todo
+4,Tailor resume for the Northwind AI role,Job search,2026-10-13,1.5,high,todo
+5,Prepare STAR stories for interviews,Job search,2026-10-14,1,medium,todo
+6,Update LinkedIn headline and projects,Job search,2026-10-16,0.75,low,todo
+7,Sign Lily's field-trip form,Family,2026-10-14,0.25,high,todo
+8,Read 'Building LLM apps' chapter 4,AI course,2026-10-19,1.75,low,todo
+9,Apply: Brightline Health AI engineer,Job search,2026-10-09,1,high,done

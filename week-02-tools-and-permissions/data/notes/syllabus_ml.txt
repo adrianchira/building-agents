@@ -1,5 +1,0 @@
-Machine Learning (Fall 2026)
-- Lectures: Monday and Wednesday 09:00-10:30, Room B201
-- Problem sets are due Tuesdays at 23:59
-- MIDTERM: Friday 16 October, 09:00-11:00, Aula Magna. Covers chapters 1-6.
-  Bring a calculator and student ID. No notes allowed.

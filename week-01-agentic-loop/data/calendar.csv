@@ -1,18 +1,20 @@
 id,date,start,end,title,category,location
-1,2026-10-12,09:00,10:30,Machine Learning lecture,class,Room B201
-2,2026-10-12,13:00,17:00,Shift at café,work,Café Central
-3,2026-10-12,18:30,19:30,Gym,health,Campus gym
-4,2026-10-13,10:00,12:00,Databases lab,class,Lab 3
-5,2026-10-13,14:00,15:00,ML study group,study,Library
-6,2026-10-13,14:30,15:30,Group project sync,study,Online
-7,2026-10-13,16:00,16:45,Dentist,personal,Dental clinic
-8,2026-10-14,09:00,10:30,Machine Learning lecture,class,Room B201
-9,2026-10-14,11:00,12:00,Project meeting,study,Online
-10,2026-10-14,12:30,17:30,Shift at café,work,Café Central
-11,2026-10-15,10:00,12:00,Databases lab,class,Lab 3
-12,2026-10-15,15:00,16:00,Thesis supervisor meeting,study,Office 4.12
-13,2026-10-15,18:30,19:30,Gym,health,Campus gym
-14,2026-10-16,09:00,11:00,ML midterm exam,exam,Aula Magna
-15,2026-10-16,13:00,18:00,Shift at café,work,Café Central
-16,2026-10-17,11:00,13:00,Brunch with Ana,social,Downtown
-17,2026-10-18,10:00,11:00,Call with parents,personal,Phone
+1,2026-10-12,06:30,07:30,Gym,health,Fitness center
+2,2026-10-12,09:00,17:30,Work,work,Office
+3,2026-10-12,17:45,18:30,Pick up kids from soccer practice,family,Riverside Park fields
+4,2026-10-12,20:00,20:45,Coffee chat with Priya (AI engineer at Kestrel Labs),networking,Zoom
+5,2026-10-13,09:00,17:30,Work,work,Home office
+6,2026-10-13,19:30,21:00,AI course: live session (evaluating RAG),course,Zoom
+7,2026-10-13,20:30,21:00,Recruiter screen: Northwind AI,job_search,Phone
+8,2026-10-14,08:00,08:45,Dentist,personal,Smile Dental
+9,2026-10-14,09:00,17:30,Work,work,Office
+10,2026-10-14,18:30,20:00,School open house,family,Lincoln Elementary
+11,2026-10-14,20:30,21:30,Mock interview with mentor,job_search,Zoom
+12,2026-10-15,06:30,07:30,Gym,health,Fitness center
+13,2026-10-15,09:00,17:30,Work,work,Home office
+14,2026-10-15,19:30,21:00,AI course: live session (building agents),course,Zoom
+15,2026-10-16,09:00,17:30,Work,work,Office
+16,2026-10-16,18:00,19:00,AI course: capstone demo day,course,Zoom
+17,2026-10-17,09:00,11:00,Kids' soccer game,family,Riverside Park fields
+18,2026-10-17,18:00,21:00,Dinner with friends,social,Downtown
+19,2026-10-18,17:00,17:30,Call with parents,family,Phone

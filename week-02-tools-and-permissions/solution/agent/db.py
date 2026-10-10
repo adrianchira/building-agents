@@ -34,22 +34,27 @@ _rw: sqlite3.Connection | None = None
 
 
 def _history(rng: random.Random, first: date, last: date):
+    """Plausible past events for Alex: work, gym, kids, the AI course (since late August), networking."""
+    course_start = date(2026, 8, 25)
     d = first
     while d <= last:
-        wd = d.weekday()
-        term = not (d.month in (7, 8) or (d.month == 12 and d.day > 19) or (d.month == 1 and d.day < 7))
-        if term and wd in (0, 2):
-            yield d, "09:00", "10:30", "Lecture", "class", "Room B201"
-        if term and wd in (1, 3):
-            yield d, "10:00", "12:00", "Lab", "class", "Lab 3"
-        if wd in (0, 2, 4) and rng.random() < 0.85:
-            yield d, "13:00", "17:00", "Shift at café", "work", "Café Central"
+        wd = d.weekday()  # 0 = Monday
+        vacation = (d.month == 12 and d.day >= 24) or (d.month == 1 and d.day == 1) or (d.month == 7 and d.day <= 10)
+        school = d.month not in (7, 8)
+        if wd < 5 and not vacation:
+            yield d, "09:00", "17:30", "Work", "work", "Office" if wd in (0, 2, 4) else "Home office"
         if wd in (0, 3) and rng.random() < 0.7:
-            yield d, "18:30", "19:30", "Gym", "health", "Campus gym"
-        if wd == 5 and rng.random() < 0.5:
-            yield d, "20:00", "23:00", rng.choice(["Dinner with friends", "Cinema", "Party"]), "social", "Downtown"
+            yield d, "06:30", "07:30", "Gym", "health", "Fitness center"
+        if wd == 0 and school and not vacation:
+            yield d, "17:45", "18:30", "Pick up kids from soccer practice", "family", "Riverside Park fields"
+        if wd in (1, 3) and d >= course_start:
+            yield d, "19:30", "21:00", "AI course: live session", "course", "Zoom"
+        if wd < 5 and d >= date(2026, 6, 1) and rng.random() < 0.08:
+            yield d, "20:00", "20:45", "Networking chat", "networking", "Zoom"
+        if wd == 5 and school and rng.random() < 0.8:
+            yield d, "09:00", "11:00", "Kids' soccer game", "family", "Riverside Park fields"
         if wd == 6 and rng.random() < 0.9:
-            yield d, "10:00", "11:00", "Call with parents", "personal", "Phone"
+            yield d, "17:00", "17:30", "Call with parents", "family", "Phone"
         d += timedelta(days=1)
 
 

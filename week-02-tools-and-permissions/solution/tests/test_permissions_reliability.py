@@ -8,11 +8,11 @@ from agent.permissions import always, apply_policy
 from agent.reliability import TransientError, with_retries, with_timeout
 from agent.tools import TOOLS, execute_tool
 
-MOVE = dict(event_id=7, date="2026-10-15", start="16:30", end="17:15")
+MOVE = dict(event_id=8, date="2026-10-16", start="08:00", end="08:45")
 
 
 def dentist():
-    return tuple(db.rw().execute("SELECT date, start FROM events WHERE id = 7").fetchone())
+    return tuple(db.rw().execute("SELECT date, start FROM events WHERE id = 8").fetchone())
 
 
 def run(tools, name, **args):
@@ -31,29 +31,29 @@ def test_approved_write_is_committed_and_preview_shows_diff():
     previews = []
     tools = apply_policy(TOOLS, approver=lambda p: previews.append(p) or True)
     assert not run(tools, "move_event", **MOVE).is_error
-    assert dentist() == ("2026-10-15", "16:30")
-    assert "- events: (7, '2026-10-13', '16:00'" in previews[0]
-    assert "+ events: (7, '2026-10-15', '16:30'" in previews[0]
+    assert dentist() == ("2026-10-16", "08:00")
+    assert "- events: (8, '2026-10-14', '08:00'" in previews[0]
+    assert "+ events: (8, '2026-10-16', '08:00'" in previews[0]
 
 
 def test_declined_write_is_rolled_back():
     r = run(apply_policy(TOOLS, approver=always(False)), "move_event", **MOVE)
     assert r.is_error and "declined" in r.content
-    assert dentist() == ("2026-10-13", "16:00")
+    assert dentist() == ("2026-10-14", "08:00")
 
 
 def test_invalid_write_never_bothers_the_user():
     asked = []
     tools = apply_policy(TOOLS, approver=lambda p: asked.append(p) or True)
-    r = run(tools, "move_event", **{**MOVE, "start": "14:30", "end": "15:30", "date": "2026-10-13"})
+    r = run(tools, "move_event", **{**MOVE, "start": "19:30", "end": "20:00", "date": "2026-10-13"})
     assert r.is_error and "Conflicts" in r.content and asked == []
 
 
 def test_deny_override():
     tools = apply_policy(TOOLS, approver=always(True), overrides={"cancel_event": "deny"})
-    r = run(tools, "cancel_event", event_id=16)
+    r = run(tools, "cancel_event", event_id=18)
     assert r.is_error and "turned off" in r.content
-    assert db.rw().execute("SELECT 1 FROM events WHERE id = 16").fetchone()
+    assert db.rw().execute("SELECT 1 FROM events WHERE id = 18").fetchone()
 
 
 # ---------- reliability ----------
@@ -97,4 +97,4 @@ def test_crashing_approver_leaves_no_open_transaction():
     with pytest.raises(KeyboardInterrupt):
         apply_policy(TOOLS, approver=broken)["move_event"]["fn"](**MOVE)
     assert not db.rw().in_transaction
-    assert dentist() == ("2026-10-13", "16:00")
+    assert dentist() == ("2026-10-14", "08:00")

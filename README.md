@@ -1,17 +1,18 @@
 # Building Agents: a hands-on course
 
-**Course project: a personal assistant that helps a busy student organise their life.**
+**Course project: a personal assistant for a busy professional who is changing careers into AI engineering.**
 
 Every week adds one capability to the same assistant. We build it **from scratch**: first in a Jupyter notebook
-to experiment, then as clean Python modules with tests. Students work against a **simulated life** (a calendar,
-tasks and notes for one busy week) and only connect their real calendar at the end, read-only first.
+to experiment, then as clean Python modules with tests. Students work against a **simulated life**: one busy week of
+**Alex, 44**, a senior backend developer in the US with a full-time job and two kids, who is retraining as an AI
+engineer in an evening program while job-hunting. Students only connect their real calendar at the end, read-only first.
 
 | Week | Capability | What the assistant can do afterwards | Folder |
 |---|---|---|---|
 | 1 | The agentic loop | Answer questions over calendar, task and note files with exact arithmetic; route tasks to the right model | [`week-01-agentic-loop/`](week-01-agentic-loop/) |
 | 2 | Tools & permissions | Read and **change** the calendar and tasks through validated tools; writes need approval (with a dry-run diff) | [`week-02-tools-and-permissions/`](week-02-tools-and-permissions/) |
-| 3 | Context management | Handle a whole semester and long chats without the context overflowing or costs exploding | *coming* |
-| 4 | Planning | "Plan my week around the exam": time blocks, priorities, buffers, then check the plan | *coming* |
+| 3 | Context management | Handle months of history and long chats without the context overflowing or costs exploding | *coming* |
+| 4 | Planning | "Plan my week around the capstone demo and the interview": time blocks, priorities, buffers, then check the plan | *coming* |
 | 5 | Memory | Remember preferences, recurring commitments, goals and people | *coming* |
 | 6 | Multi-agent | Orchestrator + inbox triager + scheduler + reviewer that checks the plan against the rules | *coming* |
 | 7 | Evals | Simulated weeks with machine-checkable rules: no overlaps, deadlines met, preferences kept, nothing unapproved | *coming* |

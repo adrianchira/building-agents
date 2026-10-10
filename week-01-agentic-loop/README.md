@@ -1,6 +1,6 @@
 # Week 1: The agentic loop, by hand
 
-*Course project: a personal assistant that helps a busy student organise their life. This week it can read the calendar, tasks and notes and do exact arithmetic.*
+*Course project: a personal assistant for Alex, 44: full-time developer, parent of two, retraining as an AI engineer. This week it can read the calendar, tasks and notes and do exact arithmetic.*
 
 > An agent is a model in a loop. On each turn the model either **answers** or **asks for a tool**.
 > We run the tool, append the result, and call the model again until it's done.
@@ -12,7 +12,7 @@
 | `01_agentic_loop.ipynb` | **Start here.** In-class notebook: one call → one tool by hand → the loop → break it → read the trace |
 | `providers.py` | Adapters: one interface for OpenAI (default), Claude and Ollama. Used from Part 4 on |
 | `LOOPS_IN_THE_WILD.md` | How Hermes Agent and OpenClaw implement the same loop, and why they add what they add |
-| `data/` | A simulated student's week (Mon 12 – Sun 18 Oct 2026): `calendar.csv`, `tasks.csv`, `notes/` (syllabus, preferences, café rota) |
+| `data/` | Alex's week (Mon 12 – Sun 18 Oct 2026): `calendar.csv`, `tasks.csv`, `notes/` (AI course syllabus, preferences, job-search pipeline) |
 | `solution/` | Reference solution for homework 8.1 (the notebook refactored into modules, with tests). **Instructors: remove before sharing with students.** |
 
 ## Run it
@@ -25,7 +25,7 @@ Reference solution:
 ```bash
 cd week-01-agentic-loop/solution
 pytest                                   # no API key needed: uses a fake client
-python main.py "What do I have on Wednesday, and when could I fit 2 hours of revision?"
+python main.py "What do I have on Wednesday, and when could I fit 2 hours of capstone work?"
 python main.py --route "List the files"          # classify first, then pick provider + model
 ```
 

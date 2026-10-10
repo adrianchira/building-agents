@@ -16,8 +16,9 @@ DATA_DIR = Path(
 TODAY = "Monday 2026-10-12"  # the simulated "now" of the sample data
 
 SYSTEM_PROMPT = (
-    f"You are a personal assistant for a busy university student. Today is {TODAY}. "
-    "Their calendar, task list and notes are files in a sandboxed data folder. Never do "
+    "You are a personal assistant for Alex, a 44-year-old software developer with a full-time "
+    f"job and two kids, who is retraining to become an AI engineer. Today is {TODAY}. "
+    "Alex's calendar, task list and notes are files in a sandboxed data folder. Never do "
     "arithmetic in your head: use the calculator. When you have the answer, reply briefly "
     "and show the key numbers you used."
 )

@@ -164,6 +164,22 @@ def ollama_models() -> set[str]:
         return set()
 
 
+KEY_VARS = {"openai": "OPENAI_API_KEY", "anthropic": "ANTHROPIC_API_KEY"}
+
+
+def load_api_key(provider: str) -> None:
+    """Read the course's .env file into the environment and check the provider's key is there.
+
+    The .env file lives in the course folder (it's searched upward from the notebook's folder)
+    and is never committed. Keys already set in the environment win over the file."""
+    from dotenv import find_dotenv, load_dotenv
+    load_dotenv(find_dotenv(usecwd=True))
+    if provider in KEY_VARS and not is_available(provider, ""):
+        raise RuntimeError(
+            f"No {KEY_VARS[provider]} found. Copy .env.example to .env in the course folder, "
+            "put your key in it, save, then restart the kernel. (See 'Your API key' in the README.)")
+
+
 def is_available(provider: str, model: str) -> bool:
     """Cheap check so a router never picks a provider we can't reach."""
     if provider == "openai":

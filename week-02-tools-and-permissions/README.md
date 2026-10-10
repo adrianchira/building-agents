@@ -16,10 +16,8 @@ over a calendar and task database, and the power to change things, safely.*
 
 ## Run it
 
-```bash
-cd week-02-tools-and-permissions
-jupyter notebook 02_tools_and_permissions.ipynb
-```
+Open `week-02-tools-and-permissions/02_tools_and_permissions.ipynb` in VS Code, select the `.venv` kernel and run the cells from the top.
+Your key must be in the course's `.env` file first (see [Your API key](../README.md#your-api-key)).
 
 Reference solution:
 
@@ -46,7 +44,8 @@ python main.py --reset "Move my dentist appointment to Thursday 16:30"   # asks 
 
 ## Notes for the instructor
 
-- Part 5 uses `input()` for approvals: run it in Jupyter or VS Code, where input prompts work.
+- Part 5 uses `input()` for approvals. In VS Code the prompt appears as an input box at the **top of the window**;
+  type `y` or `n` and press Enter. (The cell keeps running until you answer.)
 - `lifedb.create_db()` resets the database. Re-run it after experiments that change data.
 - Part 1 makes 9 agent runs and Part 7 makes 30 single calls. The default `gpt-6-luna` keeps that cheap; on Claude the setup cell uses `claude-sonnet-5-5`.
 - Known answers (for checking students' runs): 13.75 h of tasks due before Friday; free time Mon–Thu 3.5 / 4.75 / 1.5 / 6 h;

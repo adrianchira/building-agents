@@ -17,10 +17,8 @@
 
 ## Run it
 
-```bash
-cd week-01-agentic-loop
-jupyter notebook 01_agentic_loop.ipynb
-```
+Open `week-01-agentic-loop/01_agentic_loop.ipynb` in VS Code, select the `.venv` kernel and run the cells from the top.
+Your key must be in the course's `.env` file first (see [Your API key](../README.md#your-api-key)).
 
 Reference solution:
 

@@ -7,13 +7,14 @@
 
 import sys
 
-from agent import TOOLS, apply_policy, run_agent, run_routed
-from agent import db
+from agent import TOOLS, apply_policy, config, db, run_agent, run_routed
+from agent.providers import load_api_key
 
 DEFAULT_TASK = "Find me a 2-hour slot before Thursday evening to revise for the ML midterm."
 
 
 def main() -> None:
+    load_api_key(config.PROVIDER)  # reads the course's .env file
     args = sys.argv[1:]
     flags = {a for a in args if a.startswith("--")}
     task = " ".join(a for a in args if not a.startswith("--")) or DEFAULT_TASK

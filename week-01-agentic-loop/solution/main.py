@@ -6,7 +6,8 @@
 
 import sys
 
-from agent import run_agent, run_routed
+from agent import config, run_agent, run_routed
+from agent.providers import load_api_key
 
 DEFAULT_TASK = (
     "Which open tasks are due before my ML midterm on Friday, how many hours of work "
@@ -16,6 +17,7 @@ DEFAULT_TASK = (
 
 
 def main() -> None:
+    load_api_key(config.PROVIDER)  # reads the course's .env file
     args = sys.argv[1:]
     routed = "--route" in args
     task = " ".join(a for a in args if a != "--route") or DEFAULT_TASK

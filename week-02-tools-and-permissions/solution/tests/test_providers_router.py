@@ -1,6 +1,7 @@
 """Adapters and router, tested with fake SDK clients (no API keys, no network)."""
 
 import json
+import os
 from types import SimpleNamespace as NS
 
 import pytest
@@ -129,3 +130,26 @@ def test_default_provider_is_openai_with_non_strict_tools():
     first = fake.requests[0]
     assert first["model"] == config.MODEL and first["instructions"] == config.SYSTEM_PROMPT
     assert all(t["strict"] is False for t in first["tools"])
+
+
+# ---------- API key from .env ----------
+
+def test_load_api_key_finds_env_file_in_a_parent_folder(tmp_path, monkeypatch):
+    from agent.providers import load_api_key
+    (tmp_path / ".env").write_text("OPENAI_API_KEY=sk-test-from-dotenv\n")
+    (tmp_path / "week-01").mkdir()
+    monkeypatch.chdir(tmp_path / "week-01")          # notebooks run from a week folder
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    try:
+        load_api_key("openai")
+        assert os.environ["OPENAI_API_KEY"] == "sk-test-from-dotenv"
+    finally:
+        os.environ.pop("OPENAI_API_KEY", None)
+
+
+def test_load_api_key_explains_what_to_do(tmp_path, monkeypatch):
+    from agent.providers import load_api_key
+    monkeypatch.chdir(tmp_path)                       # no .env anywhere above tmp_path
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    with pytest.raises(RuntimeError, match=r"Copy \.env\.example to \.env"):
+        load_api_key("openai")

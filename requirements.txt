@@ -1,5 +1,7 @@
 openai>=3.24        # default provider (Responses API); also used for local models via Ollama
 anthropic>=1.11     # optional: run the notebooks on Claude
 pydantic>=2
+python-dotenv>=1    # loads your API key from the .env file
 jupyter
+ipykernel
 pytest

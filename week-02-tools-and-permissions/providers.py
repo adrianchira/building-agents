@@ -56,6 +56,13 @@ class Step:
 
 # ---------------------------------------------------------------- OpenAI Responses API
 
+def _as_dict(item: Any) -> Any:
+    """SDK output item -> plain dict (test doubles may be simple objects)."""
+    if hasattr(item, "model_dump"):
+        return item.model_dump(exclude_none=True, warnings=False)
+    return dict(vars(item)) if hasattr(item, "__dict__") else item
+
+
 class ResponsesConversation:
     """OpenAI's Responses API. Ollama (>= 0.13.3) serves the same API locally."""
 
@@ -77,7 +84,9 @@ class ResponsesConversation:
     def ask(self) -> Step:
         r = self.client.responses.create(model=self.model, instructions=self.system, input=self.input,
                                          tools=self.tools, max_output_tokens=MAX_TOKENS, **self._extra())
-        self.input += r.output                     # everything back, including reasoning items
+        # everything back, including reasoning items, as plain dicts (like the context talk's 08):
+        # we own the history, and it stays JSON-friendly for counting and clearing
+        self.input += [_as_dict(o) for o in r.output]
         calls = [ToolCall(i.call_id, i.name, json.loads(i.arguments or "{}"))
                  for i in r.output if i.type == "function_call"]
         refused = any(c.type == "refusal" for i in r.output if i.type == "message" for c in i.content)

@@ -8,3 +8,6 @@ life.db
 week-*/data/
 desk_files/
 memories/
+.tool_outputs/
+memories_agent/
+memories_demo/

@@ -15,7 +15,7 @@ To freeze it, e.g. for a recorded demo, set `LIFE_TODAY=2026-10-12` in `.env`.
 |---|---|---|---|
 | 1 | The agentic loop | Answer questions over calendar, task and note files with exact arithmetic; route tasks to the right model | [`week-01-agentic-loop/`](week-01-agentic-loop/) |
 | 2 | Tools & permissions | Read and **change** the calendar and tasks through validated tools; writes need approval (with a dry-run diff) | [`week-02-tools-and-permissions/`](week-02-tools-and-permissions/) |
-| 3 | Context management | Keep the desk tidy: measure it, clear old tool results, compact long chats, remember across sessions, cache the stable part | [`week-03-context-management/`](week-03-context-management/) |
+| 3 | Context management | "What's on the desk?": measure the desk, sliding window, compaction, clear and offload tool output, memory, sub-agents, retrieval, what the OpenAI API does for you | [`week-03-context-management/`](week-03-context-management/) |
 | 4 | Planning | "Plan my week around the capstone demo and the interview": time blocks, priorities, buffers, then check the plan | *coming* |
 | 5 | Memory | Remember preferences, recurring commitments, goals and people | *coming* |
 | 6 | Multi-agent | Orchestrator + inbox triager + scheduler + reviewer that checks the plan against the rules | *coming* |

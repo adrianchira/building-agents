@@ -11,3 +11,5 @@ memories/
 .tool_outputs/
 memories_agent/
 memories_demo/
+week-*/runs/
+week-*/alex_cli.py
